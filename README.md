@@ -3,6 +3,32 @@
 nest 프로젝트를 시작할때 기본적으로 사용할 공통 기능, 객체 등을 미리 만들어 놓은 프로젝트입니다.
 
 ## CommonResponse
+`CommonRes` 공통 응답 객체
+```javascript
+export class CommonRes<T> {
+  @ApiProperty({ required: true, example: '성공 여부' })
+  success: boolean;
+
+  @ApiProperty({ required: true, example: '성공시 메세지' })
+  message: string;
+
+  @ApiProperty({ required: true, example: '정렬방식' })
+  sort: PageSort;
+
+  @ApiProperty({ required: true, example: '응답 객체 || 응답 메세지' })
+  data: T;
+
+  constructor(success: boolean, message: string, data: T) {
+    this.success = success;
+    this.message = message;
+    this.data = data;
+  }
+
+  static of<T>(message: string, data: T) {
+    return new CommonRes(true, message, data);
+  }
+}
+```
 
 ## Exception
 

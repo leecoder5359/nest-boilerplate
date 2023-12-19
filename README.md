@@ -126,3 +126,30 @@ export class TransformInterceptor<T, R> implements NestInterceptor<T, R> {
   }
 }
 ```
+
+## Middleware
+
+`LoggerMiddleware`
+요청에 들어온 기본적인 정보를 로깅하기 위한 미들웨어
+```javascript
+@Injectable()
+export class LoggerMiddleware implements NestMiddleware {
+  constructor(@Inject(Logger) private readonly logger: LoggerService) {}
+
+  use(request: Request, response: Response, next: NextFunction): void {
+    const { ip, method, originalUrl: url } = request;
+    const userAgent = request.get('user-agent') || '';
+
+    response.on('close', () => {
+      const { statusCode } = response;
+      const contentLength = response.get('content-length');
+
+      this.logger.log(
+        `${method} ${url} ${statusCode} ${contentLength} - ${userAgent} ${ip}`,
+      );
+    });
+
+    next();
+  }
+}
+```

@@ -76,8 +76,6 @@ export class PageResDto<T> {
 `Public`
 인가를 거치지 않고 api 사용을 위한 데코레이터
 ```javascript
-import { SetMetadata } from '@nestjs/common';
-
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 ```
@@ -85,8 +83,6 @@ export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
 `Roles`
 역할에 따른 인가를 위한 데코레이터
 ```javascript
-import { SetMetadata } from '@nestjs/common';
-
 // User Entity에 사용될 Enum을 사용하면 됨
 export enum Role {
   Admin = 'ADMIN',
@@ -96,6 +92,21 @@ export enum Role {
 export const ROLES_KEY = 'roles';
 export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
 
+```
+
+`User`
+요청에 포함된 유저 정보를 가져오기위한 데코레이터
+```javascript
+export const User = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext) => {
+    const request = ctx.switchToHttp().getRequest();
+    return request.user;
+  },
+);
+
+export interface UserAfterAuth {
+  id: string;
+}
 ```
 
 ## Interceptor

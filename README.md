@@ -164,3 +164,40 @@ export class LoggerMiddleware implements NestMiddleware {
   }
 }
 ```
+
+### Guard
+
+`ThrottlerBehindProxyGuard`
+호출 횟수 제한을 위한 Guard
+```javascript
+@Injectable()
+export class ThrottlerBehindProxyGuard extends ThrottlerGuard {
+    protected getTracker(req: Record<string, any>): Promise<string> {
+        return req.ips.length ? req.ips[0] : req.ip;
+    }
+}
+```
+횟수 제한 예시
+```javascript
+@Module({
+    imports: [
+        ThrottlerModule.forRoot([
+            {
+                limit: 10,
+                ttl: 60000, // 분당 10회 제한
+            },
+        ]),
+        ...
+})
+export class AppModule implements NestModule {
+    ...
+}
+
+```
+```javascript
+@UseGuards(ThrottlerBehindProxyGuard)
+@Controller('api/videos')
+export class VideoController {
+    ...
+}
+```

@@ -11,12 +11,28 @@ nest 프로젝트를 시작할때 기본적으로 사용할 공통 기능, 객�
 ## Decorator
 
 `Public`
-인증을 거치지 않고 api 사용을 위한 데코레이터
+인가를 거치지 않고 api 사용을 위한 데코레이터
 ```javascript
 import { SetMetadata } from '@nestjs/common';
 
 export const IS_PUBLIC_KEY = 'isPublic';
 export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+```
+
+`Roles`
+역할에 따른 인가를 위한 데코레이터
+```javascript
+import { SetMetadata } from '@nestjs/common';
+
+// User Entity에 사용될 Enum을 사용하면 됨
+export enum Role {
+  Admin = 'ADMIN',
+  User = 'USER',
+}
+
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: Role[]) => SetMetadata(ROLES_KEY, roles);
+
 ```
 
 ## Interceptor

@@ -8,4 +8,9 @@ export class AppController {
   getHello(): string {
     return 'Hello World!';
   }
+
+  @Get('/ecs')
+  ecsTest(): string {
+    return 'ecs up!';
+  }
 }
